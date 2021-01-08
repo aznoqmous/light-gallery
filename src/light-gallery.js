@@ -1,19 +1,12 @@
-const defaultConfig = {
-    selector: 'light-gallery', //classname selector
-    thumbTagSelector: 'a',
-    thumbClassSelector: null,
-    defaultThumb: 'undefined.jpg.png',
-    element: null
-};
+export default class LightGallery {
 
-class LightGallery {
     constructor(config) {
-
-        console.log('light-gallery', config);
-
-        this.defaultConfig = defaultConfig;
-        var config = config || {};
-        this.config = this.getConfig(config);
+        this.config = Object.assign({
+            selector: 'light-gallery', //classname selector
+            thumbSelector: 'a',
+            defaultThumb: 'undefined.jpg.png',
+            element: null
+        }, config);
 
         this.init();
 
@@ -24,21 +17,16 @@ class LightGallery {
 
         this.current = 0;
 
-        this.container = this.config.element || document.getElementById(this.config.selector);
+        this.container = this.config.element || document.querySelector(this.config.selector);
         this.getStyles();
 
         this.thumbs = this.getThumbs();
-        console.log(this.thumbs);
 
         this.panes = [];
 
         this.buildHTML();
         this.bindEvents();
 
-    }
-
-    getConfig(config) {
-        return Object.assign(this.defaultConfig, config);
     }
 
     buildHTML() {
@@ -56,36 +44,36 @@ class LightGallery {
     }
 
     buildPanes() {
-        for (var i = 0; i < this.thumbs.length; i++) {
-            var thumb = this.thumbs[i];
 
-            var pane = document.createElement('div');
-            pane.classList.add('light-gallery-box-pane');
+      this.thumbs.map((thumb, i) => {
 
-            var fig = document.createElement('figure');
+          let pane = document.createElement('div');
+          pane.classList.add('light-gallery-box-pane');
 
-            var img = document.createElement('img');
-            img.setAttribute('data-light-gallery-src', thumb.getAttribute('href'));
+          let fig = document.createElement('figure');
 
-            fig.appendChild(img);
-            pane.appendChild(fig);
-            this.box.appendChild(pane);
+          let img = document.createElement('img');
+          img.setAttribute('data-light-gallery-src', thumb.getAttribute('href'));
 
-            this.panes.push(pane);
-            thumb.setAttribute('data-light-gallery-index', i);
-        }
+          fig.appendChild(img);
+          pane.appendChild(fig);
+          this.box.appendChild(pane);
+
+          this.panes.push(pane);
+          thumb.setAttribute('data-light-gallery-index', i);
+      })
+
     }
 
     getThumbs() {
         var arrThumbs = [];
 
-        var thumbs = this.container.getElementsByTagName( this.config.thumbTagSelector );
-        if( this.config.thumbClassSelector ) var thumbs = this.container.getElementsByClassName( this.config.thumbClassSelector );
 
-        for (var i = 0; i < thumbs.length; i++) {
-            var thumb = thumbs[i];
-            if ( thumb.getElementsByTagName('img').length ) arrThumbs.push(thumb);
-        }
+        let thumbs = [...this.container.querySelectorAll(this.config.thumbSelector)]
+
+        thumbs.map(thumb => {
+          if ( thumb.querySelector('img') ) arrThumbs.push(thumb);
+        })
 
         return thumbs;
     }
@@ -125,7 +113,6 @@ class LightGallery {
             thumb.addEventListener('click', function (e) {
                 e.preventDefault();
                 self.setActive(this);
-                console.log('click');
             });
         }
 
