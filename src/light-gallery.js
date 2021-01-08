@@ -109,7 +109,7 @@ export default class LightGallery {
         this.thumbs.map(thumb => {
           thumb.addEventListener('click', (e)=> {
               e.preventDefault();
-              this.setActive(this);
+              this.setActive(thumb);
           });
         })
 
