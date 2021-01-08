@@ -90,8 +90,9 @@ export default class LightGallery {
 
         this.styles.innerHTML += '.light-gallery.active .light-gallery-box, .light-gallery.active .light-gallery-nav { opacity: 1; pointer-events: all }';
 
-        this.styles.innerHTML += '.light-gallery-box .light-gallery-box-pane { height: 100%; width: 100vw; display: flex; justify-content: center; align-items: center; }';
-        this.styles.innerHTML += '.light-gallery-box .light-gallery-box-pane figure { overflow: hidden }';
+        this.styles.innerHTML += '.light-gallery-box .light-gallery-box-pane { height: calc(100vh - 2rem); margin-top: 1rem; width: 100vw; display: flex; justify-content: center; align-items: center; }';
+        this.styles.innerHTML += '.light-gallery-box .light-gallery-box-pane figure { display: flex; height: 100%; width: 100%; }';
+        this.styles.innerHTML += '.light-gallery-box .light-gallery-box-pane figure img { height: 100%; width: 100%; object-fit: contain; }';
 
         this.styles.innerHTML += '.light-gallery-nav { z-index: 100001; position: fixed; top: 50vh; left: 0; width: 100vw; display: flex; justify-content: space-between; align-items: center; transform: translate3d(0, -50%, 0); }';
 
@@ -105,27 +106,22 @@ export default class LightGallery {
     }
 
     bindEvents() {
-        var self = this;
+        this.thumbs.map(thumb => {
+          thumb.addEventListener('click', (e)=> {
+              e.preventDefault();
+              this.setActive(this);
+          });
+        })
 
-        // BIND THUMBS
-        for (var i = 0; i < this.thumbs.length; i++) {
-            var thumb = this.thumbs[i];
-            thumb.addEventListener('click', function (e) {
-                e.preventDefault();
-                self.setActive(this);
-            });
-        }
-
-        //BIND BOX
-        this.box.addEventListener('click', function () {
-            self.setUnactive()
+        this.box.addEventListener('click', () =>{
+            this.setUnactive()
         });
 
-        this.prev.addEventListener('click', function () {
-            self.prevPane()
+        this.prev.addEventListener('click', () =>{
+            this.prevPane()
         });
-        this.next.addEventListener('click', function () {
-            self.nextPane()
+        this.next.addEventListener('click', () =>{
+            this.nextPane()
         });
 
     }
