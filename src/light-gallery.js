@@ -18,6 +18,9 @@ export default class LightGallery {
         this.current = 0;
 
         this.container = this.config.element || document.querySelector(this.config.selector);
+
+        if(!this.container) return null;
+        
         this.getStyles();
 
         this.thumbs = this.getThumbs();
